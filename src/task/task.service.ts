@@ -8,7 +8,7 @@ export class TaskService {
     this.tasks.push(task);
   }
 
-  listAll(): TaskDto[] {
+  findAll(): TaskDto[] {
     return this.tasks;
   }
 

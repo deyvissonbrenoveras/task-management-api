@@ -12,8 +12,8 @@ export class TaskController {
   }
 
   @Get()
-  listAll(): TaskDto[] {
-    return this.taskService.listAll();
+  findAll(): TaskDto[] {
+    return this.taskService.findAll();
   }
 
   @Put()
