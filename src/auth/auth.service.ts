@@ -10,9 +10,14 @@ export class AuthService {
   private jwtSecret: string;
   private jwtExpirationTimeInSeconds: number;
 
-  constructor(private readonly usersService: UsersService, private readonly configService: ConfigService) {
-    this.jwtSecret = this.configService.get<string>('JWT_SECRET')
-    this.jwtExpirationTimeInSeconds = +this.configService.get<number>('JWT_EXPIRATION_TIME')
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+  ) {
+    this.jwtSecret = this.configService.get<string>('JWT_SECRET');
+    this.jwtExpirationTimeInSeconds = +this.configService.get<number>(
+      'JWT_EXPIRATION_TIME',
+    );
   }
 
   signIn(username: string, password: string): AuthResponseDto {
@@ -21,9 +26,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const { password: removedPassword, ...userWithoutPassword } = foundUser
+    delete foundUser.password;
 
-    const token = jwtSign(userWithoutPassword, this.jwtSecret, { expiresIn: this.jwtExpirationTimeInSeconds })
+    const token = jwtSign(foundUser, this.jwtSecret, {
+      expiresIn: this.jwtExpirationTimeInSeconds,
+    });
     return { token, expiresIn: this.jwtExpirationTimeInSeconds };
   }
 }
