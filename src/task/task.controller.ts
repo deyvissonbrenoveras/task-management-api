@@ -13,7 +13,7 @@ import { TaskService } from './task.service';
 
 @Controller('task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) { }
+  constructor(private readonly taskService: TaskService) {}
 
   @Post()
   create(@Body() task: TaskDto) {
@@ -22,7 +22,7 @@ export class TaskController {
 
   @Get('/:id')
   findById(@Param('id') id: string) {
-    return this.taskService.findById(id)
+    return this.taskService.findById(id);
   }
 
   @Get()

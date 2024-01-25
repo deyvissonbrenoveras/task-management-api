@@ -10,46 +10,55 @@ export class TaskService {
   }
 
   findById(id: string): TaskDto {
-    const foundTask = this.tasks.filter(t => t.id === id);
+    const foundTask = this.tasks.filter((t) => t.id === id);
 
     if (foundTask.length) {
-      return foundTask[0]
+      return foundTask[0];
     }
 
-    throw new HttpException(`Task with id ${id} not found`, HttpStatus.NOT_FOUND)
+    throw new HttpException(
+      `Task with id ${id} not found`,
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   findAll(params: FindAllParameters): TaskDto[] {
-    return this.tasks.filter(t => {
+    return this.tasks.filter((t) => {
       let match = true;
 
       if (params.title != undefined && t.title !== params.title) {
-        match = false
+        match = false;
       }
 
       if (params.status != undefined && t.status !== params.status) {
-        match = false
+        match = false;
       }
-      return match
-    })
+      return match;
+    });
   }
 
   update(task: TaskDto) {
-    let taskIndex = this.tasks.findIndex(t => t.id === task.id);
+    const taskIndex = this.tasks.findIndex((t) => t.id === task.id);
 
     if (taskIndex >= 0) {
-      this.tasks[taskIndex] = task
-      return
+      this.tasks[taskIndex] = task;
+      return;
     }
-    throw new HttpException(`Task with id ${task.id} not found`, HttpStatus.BAD_REQUEST)
+    throw new HttpException(
+      `Task with id ${task.id} not found`,
+      HttpStatus.BAD_REQUEST,
+    );
   }
 
   remove(id: string) {
-    let taskIndex = this.tasks.findIndex(t => t.id === id);
+    const taskIndex = this.tasks.findIndex((t) => t.id === id);
     if (taskIndex >= 0) {
       this.tasks.splice(taskIndex, 1);
-      return
+      return;
     }
-    throw new HttpException(`Task with id ${id} not found`, HttpStatus.BAD_REQUEST)
+    throw new HttpException(
+      `Task with id ${id} not found`,
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
