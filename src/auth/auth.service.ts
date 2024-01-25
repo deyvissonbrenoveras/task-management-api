@@ -1,8 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { ConfigService } from '@nestjs/config';
-import { sign } from 'jsonwebtoken';
+import { sign as jwtSign } from 'jsonwebtoken';
 import { AuthResponseDto } from './auth.dto';
+import { compareSync as bcryptCompareSync } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +17,13 @@ export class AuthService {
 
   signIn(username: string, password: string): AuthResponseDto {
     const foundUser = this.usersService.findByUserName(username);
-    if (foundUser?.password !== password) {
+    if (!bcryptCompareSync(password, foundUser.password)) {
       throw new UnauthorizedException();
     }
 
     const { password: removedPassword, ...userWithoutPassword } = foundUser
 
-    const token = sign(userWithoutPassword, this.jwtSecret, { expiresIn: this.jwtExpirationTimeInSeconds })
+    const token = jwtSign(userWithoutPassword, this.jwtSecret, { expiresIn: this.jwtExpirationTimeInSeconds })
     return { token, expiresIn: this.jwtExpirationTimeInSeconds };
   }
 }
