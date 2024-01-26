@@ -1,73 +1,113 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Task Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Introdução
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Projeto criado para meu portfólio e para o curso gratuito de Nest JS no meu [canal do Youtube](https://www.youtube.com/@BrenoVeras-dev). Nele iremos abordar os seguintes recursos:
 
-## Description
+- CRUD de tarefas (Controllers, Decorators, Services, Modules)
+- Validação de DTO com class-validator
+- Variáveis de ambiente com ConfigService
+- Autenticação (JwtService, App guard)
+- Password hash
+- Banco de dados - TODO
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Instalação
 
-## Installation
+### Pré-requisitos
 
-```bash
-$ npm install
+Esse projeto foi desenvolvido utilizando a seguinte versão do node:
+
+[Node v18.12.0 LTS](https://nodejs.org/en/blog/release/v18.12.0)
+
+### Passos de Instalação
+
+1. Clone o repositório: `git clone git@github.com:deyvissonbrenoveras/task-management-api.git`
+2. Navegue até o diretório do projeto: `cd task-management-api`
+3. Instale as dependências: `npm install`
+
+
+## Configuração
+
+- Crie copie o arquivo .env.example e renomeie para .env, preenchendo todas a variáveis.
+- Banco de dados: TODO
+
+## Uso
+
+O task-management-api expõe um endpoint para cadastro, atualização, busca e exclusão de tarefas. também foi desenvolvido um endpoint para criação de usuários e um endpoint de autenticação, onde é possível realizar o login passando um usuário e senha.
+
+### Curls
+
+Copie os Curls abaixo e cole no seu testador de apis favorito, como [Insomnia](https://insomnia.rest/download) ou [Postman](https://www.postman.com/).
+
+#### Usuários
+```
+curl --request POST \
+  --url http://localhost:3000/users \
+  --header 'Content-Type: application/json' \
+  --data ' {
+	 "username": "username",
+	 "password": "password"
+ }'
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+#### Autenticação
+```
+curl --request POST \
+  --url http://localhost:3000/auth/login \
+  --header 'Content-Type: application/json' \
+  --data ' {
+	 "username": "username",
+	 "password": "password"
+ }'
 ```
 
-## Test
+#### Tarefas
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+##### Criar
+```
+curl --request POST \
+  --url http://localhost:3000/task \
+  --header 'Authorization: Bearer token' \
+  --header 'Content-Type: application/json' \
+  --data ' {
+    "title":"title",
+    "description": "description",
+    "expirationDate": "2024-01-01"
+ }'
 ```
 
-## Support
+##### Atualizar
+```
+curl --request PUT \
+  --url http://localhost:3000/task \
+  --header 'Authorization: Bearer token' \
+  --header 'Content-Type: application/json' \
+  --data ' {
+	 "id": "uuid here",
+    "title":"updated title",
+    "description": "updated description",
+    "status": "IN_PROGRESS",
+    "expirationDate": "2024-01-04"
+ }'
+ ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+##### Encontrar por id
+```
+curl --request GET \
+  --url http://localhost:3000/task/1 \
+  --header 'Authorization: Bearer token'
+ ```
 
-## Stay in touch
+##### Buscar com filtros
+```
+ curl --request GET \
+  --url 'http://localhost:3000/task?title=task%203&status=IN_PROGRESS' \
+  --header 'Authorization: Bearer token'
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+##### Excluir
+```
+curl --request DELETE \
+  --url http://localhost:3000/task/uuid-here \
+  --header 'Authorization: Bearer token'
+```
