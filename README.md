@@ -29,7 +29,32 @@ Esse projeto foi desenvolvido utilizando a seguinte versão do node:
 ## Configuração
 
 - Crie copie o arquivo .env.example e renomeie para .env, preenchendo todas a variáveis.
-- Banco de dados: TODO
+- Inicialize o container do banco de dados com: 
+```
+  docker-compose up -d
+```
+- Execute as migrations com:
+```
+npm run migration:run
+```  
+
+## Migrations
+
+Criar uma migration:
+```
+npm run migration:create -name=nome-da-migration
+```
+
+Executar as migrations:
+```
+  npm run migration:run
+```
+
+Reverter as migrations:
+```
+  npm run migration:revert
+```  
+
 
 ## Uso
 
