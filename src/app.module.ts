@@ -16,4 +16,4 @@ import { DbModule } from './db/db.module';
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,10 +1,16 @@
-import { IsDateString, IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-
+import {
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export enum TaskStatusEnum {
   TO_DO = 'TO_DO',
   IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE'
+  DONE = 'DONE',
 }
 export class TaskDto {
   id: string;
