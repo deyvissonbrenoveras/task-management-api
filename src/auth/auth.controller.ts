@@ -4,14 +4,14 @@ import { AuthResponseDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(
+  async signIn(
     @Body('username') username: string,
     @Body('password') password: string,
-  ): AuthResponseDto {
+  ): Promise<AuthResponseDto> {
     return this.authService.signIn(username, password);
   }
 }

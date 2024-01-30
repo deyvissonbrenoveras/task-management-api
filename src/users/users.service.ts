@@ -1,25 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
-import { UserDto } from './user.dto';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { CreateUserResponse, UserDto } from './user.dto';
 import { hashSync as bcryptHashSync } from 'bcrypt';
+import { UserEntity } from '../db/entities/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
-  private readonly users: UserDto[] = [
-    {
-      id: '1',
-      username: 'user',
-      password: '12345678',
-    },
-  ];
+  constructor(@InjectRepository(UserEntity)
+  private usersRepository: Repository<UserEntity>) { }
 
-  create(newUser: UserDto) {
-    newUser.id = uuid();
-    newUser.password = bcryptHashSync(newUser.password, 10);
-    this.users.push(newUser);
+  async create(newUser: UserDto): Promise<CreateUserResponse> {
+
+    const userAlreadyRegistered = await this.findByUserName(newUser.username);
+
+    if (userAlreadyRegistered) {
+      throw new ConflictException(`User '${newUser.username}' already registered`);
+    }
+
+    const dbUser = new UserEntity();
+    dbUser.username = newUser.username;
+    dbUser.passwordHash = bcryptHashSync(newUser.password, 10);
+
+    const { id, username } = await this.usersRepository.save(dbUser);
+    return { id, username };
   }
 
-  findByUserName(username: string): UserDto | null {
-    return this.users.find((user) => user.username === username);
+  async findByUserName(username: string): Promise<UserDto | null> {
+    const userFound = await this.usersRepository.findOne({ where: { username } })
+
+    if (!userFound) {
+      return null
+    }
+
+    return {
+      id: userFound.id,
+      username: userFound.username,
+      password: userFound.passwordHash
+    }
   }
 }
